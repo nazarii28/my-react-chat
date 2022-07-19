@@ -1,6 +1,5 @@
 import React, {useContext, useRef, useState} from 'react';
 import Layout from '../../components/Layout';
-import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import {useCollection, useDocumentData} from "react-firebase-hooks/firestore";
 import {
@@ -24,7 +23,6 @@ import Typography from '@mui/material/Typography';
 import {AlertContext, IAlertContext} from "../../context/alert/AlertState";
 import Loader from '../../components/Loader/Loader';
 import {AuthContext, IAuthContext} from "../../context/auth/AuthState";
-import {ChatContext, IChatContext} from "../../context/chat/ChatState";
 import {InputBase, styled} from '@mui/material';
 
 const chatSettingsWrapperStyles = (open: boolean) => ({
@@ -55,14 +53,17 @@ const menuIconStyles = {
     marginLeft: 'auto'
 }
 
-const chatBoxStyles = {
+const ChatBox = styled(Box)(() => ({
     flexGrow: 1,
-    overflow: 'scroll',
-    paddingBottom: '50px'
-}
+    overflow: 'auto',
+    paddingBottom: '50px',
+    '::-webkit-scrollbar': {
+        display: 'none'
+    }
+}))
 
 const BottomPanelStyled = styled(Box)(({theme}) => ({
-    position: 'fixed',
+    position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
     bottom: '5px',
@@ -163,9 +164,8 @@ const Chat = () => {
                >
                    <MenuIcon/>
                </IconButton>
-               <Box
+               <ChatBox
                 ref={messagesRef}
-                sx={chatBoxStyles}
                >
                    {
                        messages?.docs.length === 0 &&
@@ -184,7 +184,7 @@ const Chat = () => {
                            </MessageBlock>
                        ))
                    }
-               </Box>
+               </ChatBox>
                <BottomPanelStyled
                    component="form"
                    onSubmit={addMessage}
@@ -193,7 +193,7 @@ const Chat = () => {
                        value={value}
                        onChange={e => setValue(e.target.value)}
                        sx={messageInputStyles}/>
-                   <SendButton>
+                   <SendButton type="submit">
                        <SendIcon/>
                    </SendButton>
                </BottomPanelStyled>

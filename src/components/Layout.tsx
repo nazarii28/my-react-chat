@@ -27,7 +27,11 @@ const LayoutStyles = {
 const LayoutContentStyles = {
     px: 1,
     flexGrow: 1,
-    position: 'relative'
+    position: 'relative',
+    maxWidth: '500px',
+    width: '100%',
+    overflow: 'hidden',
+    margin: '0 auto'
 }
 
 const Layout = ({children, backLink, name}: LayoutProps) => {
