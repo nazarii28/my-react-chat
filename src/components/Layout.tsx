@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import NavBar from './NavBar';
 import {AlertContext, IAlertContext} from "../context/alert/AlertState";
 import Alert from '@mui/material/Alert';
+import Rooms from './Rooms';
+import {AppContext, IAppContext} from "../context/app/AppState";
 
 interface LayoutProps {
     children: React.ReactNode,
@@ -24,18 +26,31 @@ const LayoutStyles = {
     flexDirection: 'column'
 }
 
-const LayoutContentStyles = {
+const LayoutWrapperStyles = {
     px: 1,
     flexGrow: 1,
     position: 'relative',
-    maxWidth: '500px',
     width: '100%',
-    overflow: 'hidden',
-    margin: '0 auto'
+    display: 'flex',
+    padding: 0
 }
+
+const LayoutContentStyles = {
+    flexGrow: 1,
+    overflowY: 'auto',
+    height: '100vh',
+    position: 'relative'
+}
+
+const LayoutSidebarStyles = (open: boolean) => ({
+    width: '100%',
+    maxWidth: open ? '300px' : '70px',
+    padding: open ? '15px' : 0
+})
 
 const Layout = ({children, backLink, name}: LayoutProps) => {
     const {alert} = useContext(AlertContext) as IAlertContext;
+    const {isSidebarOpen} = useContext(AppContext) as IAppContext;
 
     return (
         <Box
@@ -46,9 +61,18 @@ const Layout = ({children, backLink, name}: LayoutProps) => {
                 severity={alert?.severity}>{alert?.text}</Alert>}
             <NavBar backLink={backLink} name={name}/>
             <Box
-                sx={LayoutContentStyles}
+                sx={LayoutWrapperStyles}
             >
-                {children}
+                <Box
+                    sx={LayoutSidebarStyles(isSidebarOpen)}
+                >
+                    <Rooms/>
+                </Box>
+                <Box
+                    sx={LayoutContentStyles}
+                >
+                    {children}
+                </Box>
             </Box>
         </Box>
     );

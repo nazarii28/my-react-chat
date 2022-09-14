@@ -1,7 +1,7 @@
 import {CHAT_ROUTE, LOGIN_ROUTE, ROOMS_ROUTE} from "./utils/consts";
 import Login from "./pages/Login";
 import Chat from "./pages/Chat";
-import Rooms from "./pages/Rooms";
+import BlankPage from "./components/BlankPage";
 
 
 export const publicRoutes = [
@@ -14,7 +14,7 @@ export const publicRoutes = [
 export const privateRoutes = [
     {
         path: ROOMS_ROUTE,
-        component: <Rooms/>
+        component: <BlankPage/>
     },
     {
         path: CHAT_ROUTE,

@@ -1,11 +1,12 @@
 import React, {useContext, useState} from "react";
 import {useAuthState} from "react-firebase-hooks/auth";
-import {BrowserRouter} from "react-router-dom";
+import {HashRouter as BrowserRouter} from "react-router-dom";
 import AppRouter from './components/AppRoutes';
 import {Box} from "@mui/material";
 import Loader from "./components/Loader/Loader";
 import AlertState from "./context/alert/AlertState";
 import RoomsState from "./context/rooms/RoomsState";
+import AppState from "./context/app/AppState";
 import {AuthContext, IAuthContext} from "./context/auth/AuthState";
 import ChatState from "./context/chat/ChatState";
 
@@ -32,13 +33,15 @@ function App() {
     return (
         <>
             <BrowserRouter>
-                <AlertState>
-                    <RoomsState>
-                        <ChatState>
-                            <AppRouter/>
-                        </ChatState>
-                    </RoomsState>
-                </AlertState>
+                <AppState>
+                    <AlertState>
+                        <RoomsState>
+                            <ChatState>
+                                <AppRouter/>
+                            </ChatState>
+                        </RoomsState>
+                    </AlertState>
+                </AppState>
             </BrowserRouter>
         </>
     );

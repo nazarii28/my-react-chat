@@ -9,9 +9,10 @@ import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import {useAuthState} from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import {AuthContext, IAuthContext} from "../../context/auth/AuthState";
+import { AppContext, IAppContext } from '../../context/app/AppState';
 
 interface NavBarProps {
     backLink?: string,
@@ -21,6 +22,7 @@ interface NavBarProps {
 const NavBar = ({backLink, name}: NavBarProps) => {
 
     const {auth} = useContext(AuthContext) as IAuthContext;
+    const {toggleSidebar} = useContext(AppContext) as IAppContext;
     const navigate = useNavigate();
     const [user] = useAuthState(auth);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -37,19 +39,14 @@ const NavBar = ({backLink, name}: NavBarProps) => {
                 sx={{zIndex: 999}}
                 position="relative">
                 <Toolbar>
-                    {
-                        Boolean(backLink) &&
-                            <IconButton
-                                onClick={() => navigate(`${backLink}`)}
-                                edge="start"
-                                color="inherit"
-                                aria-label="menu"
-                                sx={{ mr: 2 }}>
-                                <ArrowBackIcon />
-                            </IconButton>
-                    }
-
-
+                    <IconButton
+                        onClick={toggleSidebar}
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}>
+                        <MenuIcon />
+                    </IconButton>
                     <Box sx={{flexGrow: 1}}>
                         <h3>{Boolean(name) ? name : 'My Chat'}</h3>
                     </Box>

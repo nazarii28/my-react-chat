@@ -27,53 +27,56 @@ import {InputBase, styled} from '@mui/material';
 
 const chatSettingsWrapperStyles = (open: boolean) => ({
     position: 'absolute',
-    right: 0,
+    right: open ? 0 : '-100%',
     top: 0,
-    width: '70%',
-    zIndex: 1,
+    width: '100%',
+    maxWidth: '350px',
+    zIndex: 2,
     height: '100%',
     textAlign: 'right',
-    transform: open ? 'none' : 'translateX(70%)'
+    background: '#fff',
+    paddingTop: '65px'
 });
 
 const chatStyles = (background: undefined | string, open: boolean) => ({
-    position: 'absolute',
-    left: 0,
-    top: 0,
+    position: 'relative',
     width: '100%',
-    zIndex: 2,
+    zIndex: 1,
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    background: background ? `url(${background})` : '#333',
-    transform: open ? 'translateX(-70%)' : 'none'
+    background: background ? `url(${background})` : '#c2c2c2',
 });
 
 const menuIconStyles = {
-    marginLeft: 'auto'
+    position: 'absolute',
+    top: '15px',
+    right: '15px',
+    zIndex: 3
 }
 
 const ChatBox = styled(Box)(() => ({
     flexGrow: 1,
     overflow: 'auto',
-    paddingBottom: '50px',
+    paddingBottom: '120px',
     '::-webkit-scrollbar': {
         display: 'none'
     }
-}))
+}));
 
 const BottomPanelStyled = styled(Box)(({theme}) => ({
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
-    bottom: '5px',
+    bottom: '55px',
     width: '98%',
     display: 'flex',
     padding: '5px',
     border: `1px solid ${theme.palette.grey['300']}`,
     background: '#fff',
     borderRadius: '50px',
-}))
+    zIndex: 3
+}));
 
 const messageInputStyles = {
     flexGrow: 1,
@@ -91,7 +94,7 @@ const loaderWrapperStyles = {
 const SendButton = styled(IconButton)(({theme}) => ({
     color: '#fff',
     background: theme.palette.primary.main
-}))
+}));
 
 const Chat = () => {
     const {addAlert} = useContext(AlertContext) as IAlertContext;
@@ -147,23 +150,23 @@ const Chat = () => {
     }
 
     return (
-        <Layout backLink="/rooms" name={roomData && roomData.name}>
+        <>
             <Box
                 sx={chatSettingsWrapperStyles(open)}
             >
                 <RoomSettings roomData={roomData} id={id}/>
             </Box>
+            <IconButton
+                onClick={() => {
+                    setOpen(!open)
+                }}
+                sx={menuIconStyles}
+            >
+                <MenuIcon/>
+            </IconButton>
            <Box
             sx={chatStyles(roomData?.background, open)}
            >
-               <IconButton
-                   onClick={() => {
-                       setOpen(!open)
-                   }}
-                   sx={menuIconStyles}
-               >
-                   <MenuIcon/>
-               </IconButton>
                <ChatBox
                 ref={messagesRef}
                >
@@ -185,20 +188,20 @@ const Chat = () => {
                        ))
                    }
                </ChatBox>
-               <BottomPanelStyled
-                   component="form"
-                   onSubmit={addMessage}
-               >
-                   <InputBase
-                       value={value}
-                       onChange={e => setValue(e.target.value)}
-                       sx={messageInputStyles}/>
-                   <SendButton type="submit">
-                       <SendIcon/>
-                   </SendButton>
-               </BottomPanelStyled>
            </Box>
-        </Layout>
+            <BottomPanelStyled
+                component="form"
+                onSubmit={addMessage}
+            >
+                <InputBase
+                    value={value}
+                    onChange={e => setValue(e.target.value)}
+                    sx={messageInputStyles}/>
+                <SendButton type="submit">
+                    <SendIcon/>
+                </SendButton>
+            </BottomPanelStyled>
+        </>
     );
 };
 

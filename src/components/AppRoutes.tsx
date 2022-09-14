@@ -4,6 +4,7 @@ import {privateRoutes, publicRoutes} from "../routes";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {LOGIN_ROUTE, ROOMS_ROUTE} from "../utils/consts";
 import {AuthContext, IAuthContext} from "../context/auth/AuthState";
+import Layout from './Layout';
 
 
 const AppRouter = () => {
@@ -13,14 +14,16 @@ const AppRouter = () => {
 
     return user ?
         (
-            <Routes>
-                {
-                    privateRoutes.map(route =>
-                        <Route key={route.path} path={route.path} element={route.component} />
-                    )
-                }
-                <Route path='*' element={<Navigate to={ROOMS_ROUTE} />} />
-            </Routes>
+            <Layout>
+                <Routes>
+                    {
+                        privateRoutes.map(route =>
+                            <Route key={route.path} path={route.path} element={route.component} />
+                        )
+                    }
+                    <Route path='*' element={<Navigate to={ROOMS_ROUTE} />} />
+                </Routes>
+            </Layout>
         )
         :
         (

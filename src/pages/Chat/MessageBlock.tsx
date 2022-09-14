@@ -37,7 +37,6 @@ const MessageBlock = ({children, isSender, photoUrl, name, onDelete, isLast}: Me
                     onClick={onDelete}>Delete</MenuItem>
             </Menu>
             <Box
-                onClick={clickHandler}
                 sx={{
                     display: 'flex',
                     alignItems: 'flex-end',
@@ -47,6 +46,7 @@ const MessageBlock = ({children, isSender, photoUrl, name, onDelete, isLast}: Me
                 }}>
                 {isLast ? <Avatar src={photoUrl} alt={name}/> : <Box width="40px" />}
                 <Box
+                    onClick={clickHandler}
                     sx={{
                         background: (theme) => isSender ? theme.palette.primary.dark : theme.palette.primary.main,
                         borderRadius: `${(isLast && !isSender) ? '3px' : '10px'} ${(isLast && isSender) ? '3px' : '10px'} 10px 10px`,

@@ -1,21 +1,15 @@
 import React, {useContext, useState} from 'react';
-import Layout from '../../components/Layout';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import ListItemText from '@mui/material/ListItemText';
 import {useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import IconButton from '@mui/material/IconButton';
 import Skeleton from '@mui/material/Skeleton';
 import {IRoomsContext, RoomsContext} from "../../context/rooms/RoomsState";
+import {AppContext, IAppContext} from "../../context/app/AppState";
+import RoomsItem from './RoomsItem';
 
 const deleteButtonStyles = {
     color: 'red'
@@ -48,6 +42,7 @@ const skeletonContentStyles = {
 
 const Rooms = () => {
     const {rooms, loading, addRoom, deleteRoom} = useContext(RoomsContext) as IRoomsContext;
+    const {isSidebarOpen} = useContext(AppContext) as IAppContext;
 
     const [value, setValue] = useState('');
 
@@ -72,13 +67,13 @@ const Rooms = () => {
         setAnchorEl(null);
     }
 
-    const clickMenuHandler = (event: any, id: string) => {
-        setAnchorEl(event.target);
+    const clickMenuHandler = (event: React.MouseEvent<HTMLElement>, id: string) => {
+        setAnchorEl(event.currentTarget);
         setCurrentId(id);
     }
 
     return (
-        <Layout>
+        <>
             <Menu
                 anchorEl={anchorEl}
                 open={menuOpen}
@@ -116,46 +111,37 @@ const Rooms = () => {
                             </Box>
                         ))
                         : rooms?.docs.map((room) => (
-                        <ListItem
+                        <RoomsItem
                             key={room.id}
-                            secondaryAction={
-                                <IconButton
-                                    onClick={(e) => clickMenuHandler(e, room.id)}
-                                    edge="end"
-                                    aria-label="delete">
-                                    <MoreVertIcon/>
-                                </IconButton>
-                            }
-                            >
-                            <ListItemButton
-                                onClick={() => clickHandler(room.id)}
-                            >
-                                <ListItemAvatar>
-                                    <Avatar
-                                        alt={room.data().name}
-                                        src={room.data().image}
-                                    />
-                                </ListItemAvatar>
-                                <ListItemText primary={room.data().name} />
-                            </ListItemButton>
-                        </ListItem>
+                            isOpen={isSidebarOpen}
+                            onClick={() => clickHandler(room.id)}
+                            onClickMenu={(e: React.MouseEvent<HTMLElement>) => clickMenuHandler(e, room.id)}
+                            name={room.data().name}
+                            avatar={room.data().image}
+                        />
                     ))
                 }
             </List>
-            <Box
-                mt={3}>
-                <TextField
-                    sx={addRoomInputStyles}
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    label="Добавить комнату"
-                    variant="outlined" />
-            </Box>
-            <Button
-                sx={addRoomButtonStyles}
-                variant="outlined"
-                onClick={addHandler}>Добавить</Button>
-        </Layout>
+            {
+                isSidebarOpen &&
+                <>
+                    <Box
+                        mt={3}>
+                        <TextField
+                            sx={addRoomInputStyles}
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                            label="Добавить комнату"
+                            variant="outlined" />
+                    </Box>
+                    <Button
+                        sx={addRoomButtonStyles}
+                        variant="outlined"
+                        onClick={addHandler}>Добавить
+                    </Button>
+                </>
+            }
+        </>
     );
 };
 
